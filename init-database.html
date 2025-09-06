@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicializar Base de Datos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Inicialización de Base de Datos</h1>
+        <div id="status" class="mt-4">
+            <p>Estado: Esperando inicialización...</p>
+        </div>
+        <button id="initButton" class="btn btn-primary">Inicializar Base de Datos</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initializeDatabase } from './catalogo-db.js';
+
+        const statusDiv = document.getElementById('status');
+        const initButton = document.getElementById('initButton');
+
+        initButton.addEventListener('click', async () => {
+            try {
+                statusDiv.innerHTML = '<p class="text-info">Inicializando base de datos...</p>';
+                initButton.disabled = true;
+
+                const result = await initializeDatabase();
+
+                if (result) {
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <h4>¡Base de datos inicializada correctamente!</h4>
+                            <p>Se han creado:</p>
+                            <ul>
+                                <li>Colección de categorías (hombres y niños)</li>
+                                <li>Colección de prendas con productos de ejemplo</li>
+                            </ul>
+                            <p>Ya puedes cerrar esta página y volver al catálogo.</p>
+                        </div>
+                    `;
+                } else {
+                    throw new Error('La inicialización no fue exitosa');
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h4>Error al inicializar la base de datos</h4>
+                        <p>${error.message}</p>
+                        <p>Por favor, verifica la consola para más detalles.</p>
+                    </div>
+                `;
+                initButton.disabled = false;
+                console.error('Error completo:', error);
+            }
+        });
+    </script>
+</body>
+</html>

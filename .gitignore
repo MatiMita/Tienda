@@ -1,0 +1,15 @@
+# Firebase config
+firebase-config.js
+
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Firebase cache
+.firebase/
+*.cache
+
+# Logs
+*.log
